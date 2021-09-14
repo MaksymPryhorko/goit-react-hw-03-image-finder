@@ -1,40 +1,41 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import s from "./Modal.module.css";
+
+const modalRoot = document.querySelector("#modal-root");
 
 export default class Modal extends React.Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
   }
 
-  componentDidUnMount() {
+  componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown);
   }
 
   handleKeyDown = (e) => {
     if (e.code === "Escape") {
-      this.props.hideModal();
+      this.props.toggleModal();
     }
   };
 
   onClickOverlay = (e) => {
-    if (e.target.className === "Modal_Overlay__1BatF") {
-      this.props.hideModal();
+    if (e.target === e.currentTarget) {
+      this.props.toggleModal();
     }
   };
 
   render() {
-    return (
+    return createPortal(
       <div className={s.Overlay} onClick={this.onClickOverlay}>
-        <div className={s.Modal}>
-          <img src={this.props.bigModalImage} alt="Not found." />
-        </div>
-      </div>
+        <div className={s.Modal}>{this.props.children}</div>
+      </div>,
+      modalRoot
     );
   }
 }
 
 Modal.propTypes = {
-  bigModalImage: PropTypes.string.isRequired,
-  hideModal: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
