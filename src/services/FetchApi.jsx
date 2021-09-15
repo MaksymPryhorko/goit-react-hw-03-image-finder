@@ -17,9 +17,8 @@ export default async function FetchApi(data) {
   const { searchName, page } = data;
 
   try {
-    const searchParam = `${searchName}&image_type=photo&orientation=horizontal&safesearch=true&per_page=12&page=${page}`;
     const response = await axios.get(
-      `${BASE_URL}?key=${API_KEY}&q=${searchParam}`
+      `${BASE_URL}?key=${API_KEY}&q=${searchName}&image_type=photo&orientation=horizontal&safesearch=true&per_page=12&page=${page}`
     );
 
     return reducingResponseKeys(response.data);
